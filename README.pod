@@ -1,0 +1,56 @@
+=pod
+
+=head1 NAME
+
+Dist::Zilla::Plugin::LocalBrew - Verify that your distribution tests well in a fresh perlbrew
+
+=head1 VERSION
+
+version 0.01
+
+=head1 SYNOPSIS
+
+  # in your dist.ini
+  [LocalBrew]
+  brews = first-perlbrew
+  brews = second-perlbrew
+
+=head1 DESCRIPTION
+
+This plugin builds and tests your module with a set of given perlbrew
+environments before a release and aborts the release if testing in any
+of them fails.  Any dependencies are installed via cpanminus into
+a temporary local lib, so your perlbrew environments aren't altered.
+This comes in handy when you want to build against a set of "fresh" Perl
+installations (ie. those with only core modules) to make sure all of your
+prerequisites are included correctly.
+
+=head1 ATTRIBUTES
+
+=head2 brews
+
+A list of perlbrew environments to build and test in.
+
+=head1 ISSUES
+
+=over
+
+=item Relies on the 'which' program to detect cpanm.
+
+=back
+
+=head1 SEE ALSO
+
+L<Dist::Zilla>, L<App::perlbrew>, L<App::cpanminus>, L<local::lib>
+
+=head1 AUTHOR
+
+Rob Hoelz <rob@hoelz.ro>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2011 by Rob Hoelz.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+

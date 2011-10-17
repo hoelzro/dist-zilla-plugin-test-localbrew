@@ -1,0 +1,10 @@
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+     Switch to test generation, instead of pre-release checking.
+
+0.02 May 18 2011
+     Documentation fixes.
+
+0.01 May 18 2011
+     Initial release.
