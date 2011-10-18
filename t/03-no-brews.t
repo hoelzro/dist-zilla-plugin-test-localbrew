@@ -24,5 +24,5 @@ my $tzil = Builder->from_config(
 );
 
 throws_ok {
-    $tzil->release;
+    $tzil->build;
 } qr/No perlbrew environments specified/;

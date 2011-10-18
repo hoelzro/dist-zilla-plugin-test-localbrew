@@ -2,16 +2,16 @@ use strict;
 use warnings;
 use lib 'lib';
 
+use TAP::Harness;
 use Test::More;
 use Test::DZil;
-use Test::Exception;
 
 my $perlbrew;
 unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     plan skip_all => 'Please define TEST_PERLBREW for this test';
     exit 0;
 }
-plan tests => 1;
+plan tests => 2;
 
 my $tzil = Builder->from_config(
     { dist_root => 'fake-distributions/Fake' },
@@ -31,6 +31,21 @@ my $tzil = Builder->from_config(
     },
 );
 
-lives_ok {
-    $tzil->release;
-};
+# Thanks to test-kwailtee.t in the Dist-Zilla-Plugin-Test-Kwalitee
+# distribution for making this bit easier on me
+my $tempdir       = $tzil->tempdir;
+my $builddir      = $tempdir->subdir('build');
+my $expected_file = $builddir->subdir('xt')->subdir('release')->file("localbrew-$perlbrew.t");
+
+$tzil->build;
+
+ok -e $expected_file, 'test created';
+chdir $builddir;
+
+my $tap = TAP::Harness->new({
+    verbosity => -3,
+    merge     => 1,
+});
+
+my $agg = $tap->runtests($expected_file . '');
+ok !$agg->failed, 'running the test should succeed';
