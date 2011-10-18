@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use lib 'lib';
 
+use Cwd qw(getcwd);
 use Test::Exception;
 use Test::More tests => 2;
 use Test::DZil;
@@ -33,5 +34,8 @@ sub run_tests {
     } qr/No perlbrew environments specified/;
 }
 
+my $wd = getcwd;
+
 run_tests 'LocalBrew';
+chdir $wd;
 run_tests 'Test::LocalBrew';

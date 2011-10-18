@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use lib 'lib';
 
+use Cwd qw(getcwd);
 use TAP::Harness;
 use Test::More;
 use Test::DZil;
@@ -55,5 +56,8 @@ sub run_tests {
     is $agg->get_status, 'NOTESTS', 'running the test without PERLBREW_ROOT should skip tests';
 }
 
+my $wd = getcwd;
+
 run_tests 'LocalBrew';
+chdir $wd;
 run_tests 'Test::LocalBrew';
