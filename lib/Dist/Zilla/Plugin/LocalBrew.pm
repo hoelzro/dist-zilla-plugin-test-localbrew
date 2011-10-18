@@ -79,7 +79,7 @@ my $tmpdir = File::Temp->newdir;
 
 my $pid = fork;
 if($pid) {
-    if($pid == -1) {
+    unless(defined $pid) {
         fail "Forking failed!";
         exit 1;
     }
