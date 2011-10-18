@@ -12,7 +12,7 @@ my $tzil = Builder->from_config(
         'source/dist.ini' => simple_ini({
             name    => 'Fake',
             version => '0.01',
-        }, 'GatherDir', 'FakeRelease', 'ModuleBuild', 'Manifest',
+        }, 'GatherDir', 'FakeRelease', 'MakeMaker', 'Manifest',
             [ Prereqs => {
                 'IO::String' => 0,
             }],
