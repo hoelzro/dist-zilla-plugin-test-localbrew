@@ -71,6 +71,8 @@ foreach my $line (@lines) {
     }
 }
 
+$ENV{'PATH'} = join(':', @ENV{qw/PERLBREW_PATH PATH_WITHOUT_PERLBREW/});
+
 plan tests => 1;
 
 my $tmpdir = File::Temp->newdir;
