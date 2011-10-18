@@ -56,13 +56,19 @@ my $env = do {
     qx(perlbrew env {{$brew}})
 };
 
-while($env =~ /^\s*export\s+([0-9a-zA-Z_]+)=(.*)$/gm) {
-    my ( $k, $v ) = ( $1, $2 );
-    if($v =~ /^("|')(.*)\1$/) {
-        $v = $2;
-        $v =~ s!\\(.)!$1!ge;
+my @lines = split /\n/, $env;
+
+foreach my $line (@lines) {
+    if($line =~ /^\s*export\s+([0-9a-zA-Z_]+)=(.*)$/) {
+        my ( $k, $v ) = ( $1, $2 );
+        if($v =~ /^("|')(.*)\1$/) {
+            $v = $2;
+            $v =~ s!\\(.)!$1!ge;
+        }
+        $ENV{$k} = $v;
+    } elsif($line =~ /^unset\s+([0-9a-zA-Z_]+)/) {
+        delete $ENV{$1};
     }
-    $ENV{$k} = $v;
 }
 
 plan tests => 1;
