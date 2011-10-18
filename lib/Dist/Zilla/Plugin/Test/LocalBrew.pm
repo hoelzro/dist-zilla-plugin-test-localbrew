@@ -1,5 +1,5 @@
 ## no critic (RequireUseStrict)
-package Dist::Zilla::Plugin::LocalBrew;
+package Dist::Zilla::Plugin::Test::LocalBrew;
 
 use File::Spec;
 use File::Temp qw(tempdir);
@@ -125,7 +125,7 @@ __END__
 =head1 SYNOPSIS
 
   # in your dist.ini
-  [LocalBrew]
+  [Test::LocalBrew]
   brews = first-perlbrew
   brews = second-perlbrew
 
