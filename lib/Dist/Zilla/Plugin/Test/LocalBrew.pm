@@ -48,15 +48,15 @@ chomp $cpanm_path;
 my $perlbrew_bin = File::Spec->catdir($ENV{'PERLBREW_ROOT'}, 'perls',
     $brew, 'bin');
 
-unless(-x File::Spec->catfile($perlbrew_bin, 'perl')) {
+my ( $env, $status ) = do {
+    local $ENV{'SHELL'} = '/bin/bash'; # fool perlbrew
+    ( scalar(qx(perlbrew env $brew)), $? )
+};
+
+unless($status == 0) {
     plan skip_all => "No such perlbrew environment '$brew'";
     exit;
 }
-
-my $env = do {
-    local $ENV{'SHELL'} = '/bin/bash'; # fool perlbrew
-    qx(perlbrew env $brew)
-};
 
 my @lines = split /\n/, $env;
 
