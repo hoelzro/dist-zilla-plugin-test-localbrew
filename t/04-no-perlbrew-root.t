@@ -15,36 +15,44 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
 plan tests => 1;
 delete $ENV{'PERLBREW_ROOT'};
 
-my $tzil = Builder->from_config(
-    { dist_root => 'fake-distributions/Fake' },
-    { add_files => {
-        'source/dist.ini' => simple_ini({
-            name    => 'Fake',
-            version => '0.01',
-        }, 'GatherDir', 'FakeRelease', 'MakeMaker', 'Manifest',
-            [ Prereqs => {
-                'IO::String' => 0,
-            }],
-            [ LocalBrew => {
-                brews => $perlbrew,
-            }],
-        ),
-      },
-    },
-);
+sub run_tests {
+    my ( $plugin ) = @_;
 
-$tzil->build;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-my $tempdir       = $tzil->tempdir;
-my $builddir      = $tempdir->subdir('build');
-my $expected_file = $builddir->subdir('xt')->subdir('release')->file("localbrew-$perlbrew.t");
+    my $tzil = Builder->from_config(
+        { dist_root => 'fake-distributions/Fake' },
+        { add_files => {
+            'source/dist.ini' => simple_ini({
+                name    => 'Fake',
+                version => '0.01',
+            }, 'GatherDir', 'FakeRelease', 'MakeMaker', 'Manifest',
+                [ Prereqs => {
+                    'IO::String' => 0,
+                }],
+                [ $plugin => {
+                    brews => $perlbrew,
+                }],
+            ),
+          },
+        },
+    );
 
-chdir $builddir;
+    $tzil->build;
 
-my $tap = TAP::Harness->new({
-    verbosity => -3,
-    merge     => 1,
-});
+    my $tempdir       = $tzil->tempdir;
+    my $builddir      = $tempdir->subdir('build');
+    my $expected_file = $builddir->subdir('xt')->subdir('release')->file("localbrew-$perlbrew.t");
 
-my $agg = $tap->runtests($expected_file . '');
-is $agg->get_status, 'NOTESTS', 'running the test without PERLBREW_ROOT should skip tests';
+    chdir $builddir;
+
+    my $tap = TAP::Harness->new({
+        verbosity => -3,
+        merge     => 1,
+    });
+
+    my $agg = $tap->runtests($expected_file . '');
+    is $agg->get_status, 'NOTESTS', 'running the test without PERLBREW_ROOT should skip tests';
+}
+
+run_tests 'LocalBrew';

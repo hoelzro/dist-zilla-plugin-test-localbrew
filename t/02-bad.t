@@ -13,34 +13,42 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
 }
 plan tests => 2;
 
-my $tzil = Builder->from_config(
-    { dist_root => 'fake-distributions/Fake' },
-    { add_files => {
-        'source/dist.ini' => simple_ini({
-            name    => 'Fake',
-            version => '0.01',
-        }, 'GatherDir', 'FakeRelease', 'MakeMaker', 'Manifest',
-            [ LocalBrew => {
-                brews => $perlbrew,
-            }],
-        ),
-      },
-    },
-);
+sub run_tests {
+    my ( $plugin ) = @_;
 
-my $tempdir       = $tzil->tempdir;
-my $builddir      = $tempdir->subdir('build');
-my $expected_file = $builddir->subdir('xt')->subdir('release')->file("localbrew-$perlbrew.t");
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-$tzil->build;
+    my $tzil = Builder->from_config(
+        { dist_root => 'fake-distributions/Fake' },
+        { add_files => {
+            'source/dist.ini' => simple_ini({
+                name    => 'Fake',
+                version => '0.01',
+            }, 'GatherDir', 'FakeRelease', 'MakeMaker', 'Manifest',
+                [ $plugin => {
+                    brews => $perlbrew,
+                }],
+            ),
+          },
+        },
+    );
 
-ok -e $expected_file, 'test created';
-chdir $builddir;
+    my $tempdir       = $tzil->tempdir;
+    my $builddir      = $tempdir->subdir('build');
+    my $expected_file = $builddir->subdir('xt')->subdir('release')->file("localbrew-$perlbrew.t");
 
-my $tap = TAP::Harness->new({
-    verbosity => -3,
-    merge     => 1,
-});
+    $tzil->build;
 
-my $agg = $tap->runtests($expected_file . '');
-ok $agg->failed, 'running the test should fail';
+    ok -e $expected_file, 'test created';
+    chdir $builddir;
+
+    my $tap = TAP::Harness->new({
+        verbosity => -3,
+        merge     => 1,
+    });
+
+    my $agg = $tap->runtests($expected_file . '');
+    ok $agg->failed, 'running the test should fail';
+}
+
+run_tests 'LocalBrew';
