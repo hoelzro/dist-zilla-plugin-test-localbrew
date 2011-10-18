@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Dist::Zilla::Plugin::LocalBrew
+Dist::Zilla::Plugin::Test::LocalBrew
 
 =head1 VERSION
 
@@ -10,8 +10,37 @@ version 0.02
 
 =head1 SYNOPSIS
 
-This module is deprecated; please use L<Dist::Zilla::Plugin::Test::LocalBrew>
-instead.
+  # in your dist.ini
+  [Test::LocalBrew]
+  brews = first-perlbrew
+  brews = second-perlbrew
+
+=head1 DESCRIPTION
+
+This plugin adds a release test for your module that tests it against a set
+of given perlbrew environments.  Any dependencies are installed via cpanminus
+into a temporary local lib, so your perlbrew environments aren't altered.
+This comes in handy when you want to build against a set of "fresh" Perl
+installations (ie. those with only core modules) to make sure all of your
+prerequisites are included correctly.
+
+=head1 ATTRIBUTES
+
+=head2 brews
+
+A list of perlbrew environments to build and test in.
+
+=head1 ISSUES
+
+=over
+
+=item Relies on the 'which' program to detect cpanm.
+
+=back
+
+=head1 SEE ALSO
+
+L<Dist::Zilla>, L<App::perlbrew>, L<App::cpanminus>, L<local::lib>
 
 =head1 AUTHOR
 
@@ -27,7 +56,7 @@ the same terms as the Perl 5 programming language system itself.
 =head1 BUGS
 
 Please report any bugs or feature requests on the bugtracker website
-https://github.com/hoelzro/dist-zilla-plugin-localbrew/issues
+https://github.com/hoelzro/dist-zilla-plugin-test-localbrew/issues
 
 When submitting a bug or request, please include a test-file or a
 patch to an existing test-file that illustrates the bug or desired
