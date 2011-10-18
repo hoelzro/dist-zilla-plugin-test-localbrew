@@ -12,7 +12,7 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     exit 0;
 }
 
-plan tests => 1;
+plan tests => 2;
 delete $ENV{'PERLBREW_ROOT'};
 
 sub run_tests {
@@ -56,3 +56,4 @@ sub run_tests {
 }
 
 run_tests 'LocalBrew';
+run_tests 'Test::LocalBrew';

@@ -3,7 +3,7 @@ use warnings;
 use lib 'lib';
 
 use Test::Exception;
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Test::DZil;
 
 sub run_tests {
@@ -34,3 +34,4 @@ sub run_tests {
 }
 
 run_tests 'LocalBrew';
+run_tests 'Test::LocalBrew';

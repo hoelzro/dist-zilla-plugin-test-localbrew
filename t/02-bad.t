@@ -11,7 +11,7 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     plan skip_all => 'Please define TEST_PERLBREW for this test';
     exit 0;
 }
-plan tests => 2;
+plan tests => 4;
 
 sub run_tests {
     my ( $plugin ) = @_;
@@ -52,3 +52,4 @@ sub run_tests {
 }
 
 run_tests 'LocalBrew';
+run_tests 'Test::LocalBrew';
