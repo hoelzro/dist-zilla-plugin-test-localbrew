@@ -12,7 +12,7 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     plan skip_all => 'Please define TEST_PERLBREW for this test';
     exit 0;
 }
-plan tests => 4;
+plan tests => 6;
 
 sub run_tests {
     my ( $plugin ) = @_;
@@ -50,6 +50,7 @@ sub run_tests {
 
     my $agg = $tap->runtests($expected_file . '');
     ok $agg->failed, 'running the test should fail';
+    isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
 }
 
 my $wd = getcwd;
