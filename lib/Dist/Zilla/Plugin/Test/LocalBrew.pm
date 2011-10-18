@@ -131,10 +131,9 @@ __END__
 
 =head1 DESCRIPTION
 
-This plugin builds and tests your module with a set of given perlbrew
-environments before a release and aborts the release if testing in any
-of them fails.  Any dependencies are installed via cpanminus into
-a temporary local lib, so your perlbrew environments aren't altered.
+This plugin adds a release test for your module that tests it against a set
+of given perlbrew environments.  Any dependencies are installed via cpanminus
+into a temporary local lib, so your perlbrew environments aren't altered.
 This comes in handy when you want to build against a set of "fresh" Perl
 installations (ie. those with only core modules) to make sure all of your
 prerequisites are included correctly.
