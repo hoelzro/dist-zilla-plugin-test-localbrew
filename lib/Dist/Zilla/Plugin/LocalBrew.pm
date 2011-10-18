@@ -10,8 +10,6 @@ use namespace::clean;
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
 
-use autodie qw(fork);
-
 has brews => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
