@@ -17,10 +17,11 @@ __PACKAGE__->meta->make_immutable;
 
 __END__
 
+# ABSTRACT: DEPRECATED - Use Test::LocalBrew instead
+
 =head1 SYNOPSIS
 
-=head1 DESCRIPTION
-
-=head1 FUNCTIONS
+This module is deprecated; please use L<Dist::Zilla::Plugin::Test::LocalBrew>
+instead.
 
 =cut
