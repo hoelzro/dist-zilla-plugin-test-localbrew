@@ -158,4 +158,16 @@ A list of perlbrew environments to build and test in.
 
 L<Dist::Zilla>, L<App::perlbrew>, L<App::cpanminus>, L<local::lib>
 
+=begin comment
+
+=over
+
+=item mvp_multivalue_args
+
+=item gather_files
+
+=back
+
+=end comment
+
 =cut
