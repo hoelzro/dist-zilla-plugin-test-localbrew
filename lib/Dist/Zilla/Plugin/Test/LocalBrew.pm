@@ -36,6 +36,8 @@ unless($ENV{'PERLBREW_ROOT'}) {
     exit;
 }
 
+my $brew = q[{{$brew}}];
+
 my $cpanm_path = qx(which cpanm 2>/dev/null);
 unless($cpanm_path) {
     plan skip_all => "The 'cpanm' program is required to run this test";
@@ -44,16 +46,16 @@ unless($cpanm_path) {
 chomp $cpanm_path;
 
 my $perlbrew_bin = File::Spec->catdir($ENV{'PERLBREW_ROOT'}, 'perls',
-    "{{$brew}}", 'bin');
+    $brew, 'bin');
 
 unless(-x File::Spec->catfile($perlbrew_bin, 'perl')) {
-    plan skip_all => "No such perlbrew environment '{{$brew}}'";
+    plan skip_all => "No such perlbrew environment '$brew'";
     exit;
 }
 
 my $env = do {
     local $ENV{'SHELL'} = '/bin/bash'; # fool perlbrew
-    qx(perlbrew env {{$brew}})
+    qx(perlbrew env $brew)
 };
 
 my @lines = split /\n/, $env;
