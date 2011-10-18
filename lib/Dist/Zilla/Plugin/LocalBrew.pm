@@ -1,5 +1,7 @@
+## no critic (RequireUseStrict)
 package Dist::Zilla::Plugin::LocalBrew;
 
+## use critic (RequireUseStrict)
 use Moose;
 
 extends 'Dist::Zilla::Plugin::Test::LocalBrew';
