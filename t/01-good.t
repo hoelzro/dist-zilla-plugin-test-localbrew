@@ -57,7 +57,7 @@ sub run_tests {
     ok !$agg->failed, 'running the test should succeed';
     isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
 
-    my $output = `eval \$(perlbrew env '$perlbrew') && export PATH="\$PERLBREW_PATH:\$PATH" && perl -MIO::String </dev/null 2>&1`;
+    my $output = `eval \$(perlbrew env '$perlbrew') && export PATH="\$PERLBREW_PATH:\$PATH" && perl -MIO::String -e 'print \$INC{"IO/String.pm"}' 2>&1`;
 
     isnt $?, 0, "IO::String should not be successfully found after the test is run";
     like $output, qr#Can't locate IO/String.pm in \@INC#;
