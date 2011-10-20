@@ -12,7 +12,7 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     plan skip_all => 'Please define TEST_PERLBREW for this test';
     exit 0;
 }
-plan tests => 6;
+plan tests => 10;
 
 sub run_tests {
     my ( $plugin ) = @_;
@@ -56,6 +56,11 @@ sub run_tests {
     my $agg = $tap->runtests($expected_file . '');
     ok !$agg->failed, 'running the test should succeed';
     isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+
+    my $output = `eval \$(perlbrew env '$perlbrew') && export PATH="\$PERLBREW_PATH:\$PATH" && perl -MIO::String </dev/null 2>&1`;
+
+    isnt $?, 0, "IO::String should not be successfully found after the test is run";
+    like $output, qr#Can't locate IO/String.pm in \@INC#;
 }
 
 my $wd = getcwd;
