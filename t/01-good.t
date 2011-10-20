@@ -57,6 +57,8 @@ sub run_tests {
     ok !$agg->failed, 'running the test should succeed';
     isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
 
+    local $ENV{'PERL5LIB'} = ''; # not doing this breaks our bootstrap tests
+
     my $output = `eval \$(perlbrew env '$perlbrew') && export PATH="\$PERLBREW_PATH:\$PATH" && perl -MIO::String -e 'print \$INC{"IO/String.pm"}' 2>&1`;
 
     isnt $?, 0, "IO::String should not be successfully found after the test is run";
