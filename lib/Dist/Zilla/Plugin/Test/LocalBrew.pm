@@ -31,6 +31,8 @@ use File::Spec;
 use File::Temp;
 use Test::More;
 
+delete @ENV{qw/AUTHOR_TESTING RELEASE_TESTING/};
+
 unless($ENV{'PERLBREW_ROOT'}) {
     plan skip_all => "Environment variable 'PERLBREW_ROOT' not found";
     exit;
