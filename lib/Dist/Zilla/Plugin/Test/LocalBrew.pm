@@ -82,11 +82,10 @@ plan tests => 1;
 my $tmpdir = File::Temp->newdir;
 
 my $pid = fork;
-if($pid) {
-    unless(defined $pid) {
-        fail "Forking failed!";
-        exit 1;
-    }
+if(!defined $pid) {
+    fail "Forking failed!";
+    exit 1;
+} elsif($pid) {
     waitpid $pid, 0;
     ok !$?, "cpanm should successfully install your dist with no issues";
 } else {
