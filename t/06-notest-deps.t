@@ -10,6 +10,7 @@ sub run_tests {
     my ( $perlbrew, $plugin ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my $wd = getcwd;
 
     do { # try a bad distribution without notest_deps
         my $tzil = Builder->from_config(
@@ -46,6 +47,8 @@ sub run_tests {
         ok $agg->failed, 'running the test should fail';
         isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
     };
+
+    chdir $wd;
 
     do { # try a bad distribution with notest_deps
         my $tzil = Builder->from_config(
@@ -136,5 +139,4 @@ my $wd = getcwd;
 
 $ENV{'PERL_CPANM_OPT'} = "--mirror-only --mirror file:///$wd/fake-cpan/";
 run_tests $perlbrew, 'LocalBrew';
-chdir $wd;
 run_tests $perlbrew, 'Test::LocalBrew';
