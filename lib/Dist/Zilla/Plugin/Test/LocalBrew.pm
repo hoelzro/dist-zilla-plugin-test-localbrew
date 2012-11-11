@@ -31,6 +31,13 @@ use File::Spec;
 use File::Temp;
 use Test::More;
 
+sub is_dist_root {
+    my ( @path ) = @_;
+
+    return -e File::Spec->catfile(@path, 'Makefile.PL') ||
+           -e File::Spec->catfile(@path, 'Build.PL');
+}
+
 delete @ENV{qw/AUTHOR_TESTING RELEASE_TESTING/};
 
 unless($ENV{'PERLBREW_ROOT'}) {
@@ -94,8 +101,15 @@ if(!defined $pid) {
     close STDOUT;
     close STDERR;
 
-    chdir File::Spec->catdir($FindBin::Bin,
-        File::Spec->updir, File::Spec->updir); # exit test directory
+    my @path = File::Spec->splitdir($FindBin::Bin);
+
+    while(@path && !is_dist_root(@path)) {
+        pop @path;
+    }
+    unless(@path) {
+        die "Unable to find dist root\n";
+    }
+    chdir File::Spec->catdir(@path); # exit test directory
 
     exec 'perl', $cpanm_path, '-L', $tmpdir->dirname, '.';
 }
