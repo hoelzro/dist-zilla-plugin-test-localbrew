@@ -75,7 +75,9 @@ foreach my $line (@lines) {
     }
 }
 
-$ENV{'PATH'} = join(':', @ENV{qw/PERLBREW_PATH PATH_WITHOUT_PERLBREW/});
+my $pristine_path = qx(perlbrew display-pristine-path);
+chomp $pristine_path;
+$ENV{'PATH'} = join(':', $ENV{'PERLBREW_PATH'}, $pristine_path);
 
 plan tests => 1;
 
