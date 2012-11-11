@@ -83,6 +83,45 @@ sub run_tests {
         ok !$agg->failed, 'running the test should succeed';
         isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
     };
+
+    chdir $wd;
+
+    do { # try a distribution with failing tests to make sure we actually test things
+        my $tzil = Builder->from_config(
+            { dist_root => 'fake-distributions/Fake' },
+            { add_files => {
+                'source/dist.ini' => simple_ini({
+                    name    => 'Fake',
+                    version => '0.01',
+                }, 'GatherDir', 'FakeRelease', 'MakeMaker', 'Manifest',
+                    [ $plugin => {
+                        notest_deps => 1,
+                        brews       => $perlbrew,
+                    }],
+                ),
+              },
+            },
+        );
+
+        my $tempdir       = $tzil->tempdir;
+        my $builddir      = $tempdir->subdir('build');
+        my $expected_file = $builddir->subdir('xt')->subdir('release')->file("localbrew-$perlbrew.t");
+
+        $tzil->build;
+
+        chdir $builddir;
+
+        my $tap = TAP::Harness->new({
+            verbosity => -3,
+            merge     => 1,
+        });
+
+        my $agg = $tap->runtests($expected_file . '');
+        ok $agg->failed, 'running the test should fail';
+        isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+    };
+
+    chdir $wd;
 }
 
 my $perlbrew;
@@ -91,7 +130,7 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     exit 0;
 }
 
-plan tests => 8;
+plan tests => 12;
 
 my $wd = getcwd;
 
