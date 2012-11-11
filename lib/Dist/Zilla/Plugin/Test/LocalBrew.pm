@@ -16,6 +16,18 @@ has brews => (
     default => sub { [] },
 );
 
+has notest_deps => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
+
+sub should_test_deps {
+    my ( $self ) = @_;
+
+    return !$self->notest_deps;
+}
+
 sub mvp_multivalue_args {
     qw/brews/
 }
@@ -111,7 +123,20 @@ if(!defined $pid) {
     }
     chdir File::Spec->catdir(@path); # exit test directory
 
-    exec 'perl', $cpanm_path, '-L', $tmpdir->dirname, '.';
+    {{
+        unless($should_test_deps) {
+            return <<'END_PERL';
+    system 'perl', $cpanm_path, '--notest', '--installdeps', '-L', $tmpdir->dirname, '.';
+    if($?) {
+        exit($? >> 8);
+    }
+END_PERL
+        }
+        return '';
+    }}
+
+    system 'perl', $cpanm_path, '-L', $tmpdir->dirname, '.';
+    exit($? >> 8);
 }
 TEMPLATE
 
@@ -128,7 +153,8 @@ sub gather_files {
         $self->add_file(Dist::Zilla::File::InMemory->new(
             name    => "xt/release/localbrew-$brew.t",
             content => $self->fill_in_string($template, {
-                brew => $brew,
+                brew             => $brew,
+                should_test_deps => $self->should_test_deps,
             }),
         ));
     }
@@ -162,6 +188,10 @@ prerequisites are included correctly.
 =head2 brews
 
 A list of perlbrew environments to build and test in.
+
+=head2 notest_deps
+
+If this flag is set, don't test dependency modules.
 
 =head1 ISSUES
 
