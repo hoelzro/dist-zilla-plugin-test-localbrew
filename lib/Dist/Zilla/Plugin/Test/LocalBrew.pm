@@ -135,6 +135,7 @@ END_PERL
         return '';
     }}
 
+    delete $ENV{'PERL5LIB'};
     system 'perl', $cpanm_path, '-L', $tmpdir->dirname, '.';
     exit($? >> 8);
 }
