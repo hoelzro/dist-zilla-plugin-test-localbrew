@@ -6,7 +6,7 @@ Dist::Zilla::Plugin::Test::LocalBrew - Verify that your distribution tests well 
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -30,6 +30,14 @@ prerequisites are included correctly.
 
 A list of perlbrew environments to build and test in.
 
+=head2 notest_deps
+
+If this flag is set, don't test dependency modules.
+
+=head2 nobrew
+
+If this flag is set, test against the system perl as well.
+
 =head1 ISSUES
 
 =over
@@ -49,6 +57,8 @@ L<Dist::Zilla>, L<App::perlbrew>, L<App::cpanminus>, L<local::lib>
 =item mvp_multivalue_args
 
 =item gather_files
+
+=item should_test_deps
 
 =back
 
