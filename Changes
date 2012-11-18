@@ -1,6 +1,11 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+     - Fix bug that causes perlbrew PATH to be incorrectly set.
+     - Fix bug that prevented generated tests from working with the ExtraTests plugin.
+     - Add ability to test against system perl.
+     - Add ability to ignore tests for dependencies while still running tests for the
+       target distribution.
 
 0.03 October 20 2011
      Switch to test generation, instead of pre-release checking.
