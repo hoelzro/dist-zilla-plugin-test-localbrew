@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.04 November 18 2012
      - Fix bug that causes perlbrew PATH to be incorrectly set.
      - Fix bug that prevented generated tests from working with the ExtraTests plugin.
      - Add ability to test against system perl.
