@@ -22,6 +22,12 @@ has notest_deps => (
     default => 0,
 );
 
+has nobrew => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
+
 sub should_test_deps {
     my ( $self ) = @_;
 
@@ -57,7 +63,7 @@ unless($ENV{'PERLBREW_ROOT'}) {
     exit;
 }
 
-my $brew = q[{{$brew}}];
+my $brew = q[{{$brew || ''}}];
 
 my $cpanm_path = qx(which cpanm 2>/dev/null);
 unless($cpanm_path) {
@@ -159,6 +165,16 @@ sub gather_files {
             }),
         ));
     }
+
+    if($self->nobrew) {
+        $self->add_file(Dist::Zilla::File::InMemory->new(
+            name    => "xt/release/system-localbrew.t",
+            content => $self->fill_in_string($template, {
+                brew             => undef,
+                should_test_deps => $self->should_test_deps,
+            }),
+        ));
+    }
 }
 
 no Moose;
@@ -193,6 +209,10 @@ A list of perlbrew environments to build and test in.
 =head2 notest_deps
 
 If this flag is set, don't test dependency modules.
+
+=head2 nobrew
+
+If this flag is set, test against the system perl as well.
 
 =head1 ISSUES
 
