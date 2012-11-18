@@ -214,6 +214,8 @@ L<Dist::Zilla>, L<App::perlbrew>, L<App::cpanminus>, L<local::lib>
 
 =item gather_files
 
+=item should_test_deps
+
 =back
 
 =end comment
