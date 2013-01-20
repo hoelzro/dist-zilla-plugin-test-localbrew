@@ -45,9 +45,20 @@ use strict;
 use warnings;
 
 use FindBin;
+use File::Copy qw(copy);
 use File::Spec;
 use File::Temp;
 use Test::More;
+
+sub copy_log_file {
+    my $log_file = File::Spec->catfile($ENV{'HOME'}, '.cpanm', 'build.log');
+    my $tempfile = File::Temp->new(
+        SUFFIX => '.log',
+        UNLINK => 0,
+    );
+    copy($log_file, $tempfile->filename);
+    diag("For details, please consult $tempfile")
+}
 
 sub is_dist_root {
     my ( @path ) = @_;
@@ -114,7 +125,7 @@ if(!defined $pid) {
     exit 1;
 } elsif($pid) {
     waitpid $pid, 0;
-    ok !$?, "cpanm should successfully install your dist with no issues";
+    ok !$?, "cpanm should successfully install your dist with no issues" or copy_log_file();
 } else {
     close STDOUT;
     close STDERR;
