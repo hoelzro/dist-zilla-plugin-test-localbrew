@@ -51,7 +51,8 @@ use File::Temp;
 use Test::More;
 
 sub copy_log_file {
-    my $log_file = File::Spec->catfile($ENV{'HOME'}, '.cpanm', 'build.log');
+    my ( $home ) = @_;
+    my $log_file = File::Spec->catfile($home, '.cpanm', 'build.log');
     my $tempfile = File::Temp->new(
         SUFFIX => '.log',
         UNLINK => 0,
@@ -117,7 +118,8 @@ $ENV{'PATH'} = join(':', $ENV{'PERLBREW_PATH'}, $pristine_path);
 
 plan tests => 1;
 
-my $tmpdir = File::Temp->newdir;
+my $tmpdir  = File::Temp->newdir;
+my $tmphome = File::Temp->newdir;
 
 my $pid = fork;
 if(!defined $pid) {
@@ -125,7 +127,7 @@ if(!defined $pid) {
     exit 1;
 } elsif($pid) {
     waitpid $pid, 0;
-    ok !$?, "cpanm should successfully install your dist with no issues" or copy_log_file();
+    ok !$?, "cpanm should successfully install your dist with no issues" or copy_log_file($tmphome->dirname);
 } else {
     close STDOUT;
     close STDERR;
@@ -139,6 +141,9 @@ if(!defined $pid) {
         die "Unable to find dist root\n";
     }
     chdir File::Spec->catdir(@path); # exit test directory
+
+    # override where cpanm puts its log file
+    $ENV{'HOME'} = $tmphome->dirname;
 
     {{
         unless($should_test_deps) {
