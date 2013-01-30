@@ -78,12 +78,23 @@ sub run_tests {
 
         chdir $builddir;
         my $tap = TAP::Harness->new({
-            verbosity => -3,
+            verbosity => 1,
             merge     => 1,
         });
 
-        my $agg = $tap->runtests($expected_file . '');
+        use Capture::Tiny qw(capture);
+
+        my $agg;
+
+        my ( $stdout, $stderr ) = capture {
+            $agg = $tap->runtests($expected_file . '');
+        };
+
         ok !$agg->failed, 'running the test should succeed';
+        if($agg->failed) {
+            diag("STDOUT: $stdout");
+            diag("STDERR: $stderr");
+        }
         isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
     };
 
