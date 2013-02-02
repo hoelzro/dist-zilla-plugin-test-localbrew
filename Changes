@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+     - Keep log files from brewing, and direct user to them on failure
 
 0.04 November 18 2012
      - Fix bug that causes perlbrew PATH to be incorrectly set.
