@@ -1,3 +1,31 @@
+package LocalBrewTests::CustomHarness;
+
+use strict;
+use warnings;
+use parent 'TAP::Harness';
+
+use MRO::Compat;
+
+sub make_parser {
+    my $self = shift;
+
+    my ( $parser, $session ) = $self->next::method(@_);
+
+    $parser->callback(ALL => sub {
+        my ( $result ) = @_;
+
+        push @{ $self->{'lines' } }, $result->raw;
+    });
+
+    return ( $parser, $session );
+}
+
+sub output {
+    my ( $self ) = @_;
+
+    return join("\n", @{ $self->{'lines' }});
+}
+
 package LocalBrewTests;
 
 use strict;
