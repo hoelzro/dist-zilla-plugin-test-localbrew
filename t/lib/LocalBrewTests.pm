@@ -48,8 +48,8 @@ sub tests_fail {
     });
 
     my $agg = $tap->runtests($test_file . '');
-    ok $agg->failed, 'running the test should fail';
-    isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+    ok $agg->failed, "running $test_file should fail";
+    isnt $agg->get_status, 'NOTESTS', "running $test_file shouldn't skip anything";
 
     if(!$agg->failed || $agg->get_status eq 'NOTESTS') {
         my $output = $tap->output;
@@ -69,8 +69,8 @@ sub tests_pass {
     });
 
     my $agg = $tap->runtests($test_file . '');
-    ok !$agg->failed, 'running the test should pass';
-    isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+    ok !$agg->failed, "running $test_file should pass";
+    isnt $agg->get_status, 'NOTESTS', "running $test_file shouldn\'t skip anything";
 
     if($agg->failed || $agg->get_status eq 'NOTESTS') {
         my $output = $tap->output;
@@ -90,7 +90,7 @@ sub test_has_no_tests {
     });
 
     my $agg = $tap->runtests($test_file . '');
-    is $agg->get_status, 'NOTESTS', 'running the test without PERLBREW_ROOT should skip tests';
+    is $agg->get_status, 'NOTESTS', "running $test_file should skip tests";
 
     if($agg->get_status ne 'NOTESTS') {
         my $output = $tap->output;
