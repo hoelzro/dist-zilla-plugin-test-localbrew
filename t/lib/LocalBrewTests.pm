@@ -42,7 +42,7 @@ sub tests_fail {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $tap = TAP::Harness->new({
+    my $tap = LocalBrewTests::CustomHarness->new({
         verbosity => -3,
         merge     => 1,
     });
@@ -50,6 +50,12 @@ sub tests_fail {
     my $agg = $tap->runtests($test_file . '');
     ok $agg->failed, 'running the test should fail';
     isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+
+    if(!$agg->failed || $agg->get_status eq 'NOTESTS') {
+        my $output = $tap->output;
+        $output    =~ s/^/  /mg;
+        diag("TAP Output:\n$output");
+    }
 }
 
 sub tests_pass {
@@ -57,7 +63,7 @@ sub tests_pass {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $tap = TAP::Harness->new({
+    my $tap = LocalBrewTests::CustomHarness->new({
         verbosity => -3,
         merge     => 1,
     });
@@ -65,6 +71,12 @@ sub tests_pass {
     my $agg = $tap->runtests($test_file . '');
     ok !$agg->failed, 'running the test should pass';
     isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+
+    if($agg->failed || $agg->get_status eq 'NOTESTS') {
+        my $output = $tap->output;
+        $output    =~ s/^/  /mg;
+        diag("TAP Output:\n$output");
+    }
 }
 
 sub test_has_no_tests {
@@ -72,13 +84,19 @@ sub test_has_no_tests {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $tap = TAP::Harness->new({
+    my $tap = LocalBrewTests::CustomHarness->new({
         verbosity => -3,
         merge     => 1,
     });
 
     my $agg = $tap->runtests($test_file . '');
     is $agg->get_status, 'NOTESTS', 'running the test without PERLBREW_ROOT should skip tests';
+
+    if($agg->get_status ne 'NOTESTS') {
+        my $output = $tap->output;
+        $output    =~ s/^/  /mg;
+        diag("TAP Output:\n$output");
+    }
 }
 
 1;
