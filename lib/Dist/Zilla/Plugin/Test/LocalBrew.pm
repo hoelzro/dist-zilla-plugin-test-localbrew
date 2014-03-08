@@ -68,7 +68,7 @@ sub is_dist_root {
            -e File::Spec->catfile(@path, 'Build.PL');
 }
 
-delete @ENV{qw/AUTHOR_TESTING RELEASE_TESTING/};
+delete @ENV{qw/AUTHOR_TESTING RELEASE_TESTING PERL5LIB/};
 
 unless($ENV{'PERLBREW_ROOT'}) {
     plan skip_all => "Environment variable 'PERLBREW_ROOT' not found";
@@ -157,7 +157,6 @@ END_PERL
         return '';
     }}
 
-    delete $ENV{'PERL5LIB'};
     system 'perl', $cpanm_path, '-L', $tmpdir->dirname, '.';
     exit($? >> 8);
 }
