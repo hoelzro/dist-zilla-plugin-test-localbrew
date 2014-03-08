@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+     - Make sure that the environment doesn't cause things to fail (bug fixes)
 
 0.05 February 02 2013
      - Keep log files from brewing, and direct user to them on failure
