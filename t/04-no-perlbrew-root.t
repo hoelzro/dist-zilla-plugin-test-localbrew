@@ -1,11 +1,12 @@
 use strict;
 use warnings;
 use lib 'lib';
+use lib 't/lib';
 
 use Cwd qw(getcwd);
-use TAP::Harness;
 use Test::More;
 use Test::DZil;
+use LocalBrewTests qw(test_has_no_tests);
 
 my $perlbrew;
 unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
@@ -13,7 +14,6 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     exit 0;
 }
 
-plan tests => 2;
 delete $ENV{'PERLBREW_ROOT'};
 
 sub run_tests {
@@ -47,13 +47,7 @@ sub run_tests {
 
     chdir $builddir;
 
-    my $tap = TAP::Harness->new({
-        verbosity => -3,
-        merge     => 1,
-    });
-
-    my $agg = $tap->runtests($expected_file . '');
-    is $agg->get_status, 'NOTESTS', 'running the test without PERLBREW_ROOT should skip tests';
+    test_has_no_tests($expected_file);
 }
 
 my $wd = getcwd;
@@ -61,3 +55,5 @@ my $wd = getcwd;
 run_tests 'LocalBrew';
 chdir $wd;
 run_tests 'Test::LocalBrew';
+
+done_testing;

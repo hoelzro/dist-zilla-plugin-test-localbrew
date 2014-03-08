@@ -1,18 +1,18 @@
 use strict;
 use warnings;
 use lib 'lib';
+use lib 't/lib';
 
 use Cwd qw(getcwd);
-use TAP::Harness;
 use Test::More;
 use Test::DZil;
+use LocalBrewTests qw(tests_pass);
 
 my $perlbrew;
 unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     plan skip_all => 'Please define TEST_PERLBREW for this test';
     exit 0;
 }
-plan tests => 10;
 
 sub run_tests {
     my ( $plugin ) = @_;
@@ -48,17 +48,9 @@ sub run_tests {
     ok -e $expected_file, 'test created';
     chdir $builddir;
 
-    my $tap = TAP::Harness->new({
-        verbosity => -3,
-        merge     => 1,
-    });
-
-    my $agg = $tap->runtests($expected_file . '');
-    ok !$agg->failed, 'running the test should succeed';
-    isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+    tests_pass($expected_file);
 
     local $ENV{'PERL5LIB'} = ''; # not doing this breaks our bootstrap tests
-
     my $output = `eval \$(perlbrew env '$perlbrew') && export PATH="\$PERLBREW_PATH:\$PATH" && perl -MIO::String -e 'print \$INC{"IO/String.pm"}' 2>&1`;
 
     isnt $?, 0, "IO::String should not be successfully found after the test is run";
@@ -70,3 +62,5 @@ my $wd = getcwd;
 run_tests 'LocalBrew';
 chdir $wd;
 run_tests 'Test::LocalBrew';
+
+done_testing;

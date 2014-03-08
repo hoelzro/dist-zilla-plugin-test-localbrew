@@ -1,10 +1,11 @@
 use strict;
 use warnings;
+use lib 't/lib';
 
 use Cwd qw(getcwd);
-use TAP::Harness;
 use Test::More;
 use Test::DZil;
+use LocalBrewTests qw(tests_fail tests_pass);
 
 sub run_tests {
     my ( $perlbrew, $plugin ) = @_;
@@ -38,14 +39,7 @@ sub run_tests {
         $tzil->build;
 
         chdir $builddir;
-        my $tap = TAP::Harness->new({
-            verbosity => -3,
-            merge     => 1,
-        });
-
-        my $agg = $tap->runtests($expected_file . '');
-        ok $agg->failed, 'running the test should fail';
-        isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+        tests_fail($expected_file);
     };
 
     chdir $wd;
@@ -77,14 +71,7 @@ sub run_tests {
         $tzil->build;
 
         chdir $builddir;
-        my $tap = TAP::Harness->new({
-            verbosity => -3,
-            merge     => 1,
-        });
-
-        my $agg = $tap->runtests($expected_file . '');
-        ok !$agg->failed, 'running the test should succeed';
-        isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+        tests_pass($expected_file);
     };
 
     chdir $wd;
@@ -114,14 +101,7 @@ sub run_tests {
 
         chdir $builddir;
 
-        my $tap = TAP::Harness->new({
-            verbosity => -3,
-            merge     => 1,
-        });
-
-        my $agg = $tap->runtests($expected_file . '');
-        ok $agg->failed, 'running the test should fail';
-        isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+        tests_fail($expected_file);
     };
 
     chdir $wd;
@@ -133,10 +113,10 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     exit 0;
 }
 
-plan tests => 12;
-
 my $wd = getcwd;
 
 $ENV{'PERL_CPANM_OPT'} = "--mirror-only --mirror file:///$wd/fake-cpan/";
 run_tests $perlbrew, 'LocalBrew';
 run_tests $perlbrew, 'Test::LocalBrew';
+
+done_testing;

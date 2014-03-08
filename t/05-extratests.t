@@ -1,10 +1,11 @@
 use strict;
 use warnings;
+use lib 't/lib';
 
 use Cwd qw(getcwd);
-use TAP::Harness;
 use Test::More;
 use Test::DZil;
+use LocalBrewTests qw(tests_pass);
 
 sub run_tests {
     my ( $perlbrew, $plugin ) = @_;
@@ -37,15 +38,8 @@ sub run_tests {
     ok -e $expected_file, 'test created';
     chdir $builddir;
 
-    my $tap = TAP::Harness->new({
-        verbosity => -3,
-        merge     => 1,
-    });
-
-    $ENV{'RELEASE_TESTING'} = 1;
-    my $agg = $tap->runtests($expected_file . '');
-    ok !$agg->failed, 'running the test should succeed';
-    isnt $agg->get_status, 'NOTESTS', 'running the test shouldn\'t skip anything';
+    local $ENV{'RELEASE_TESTING'} = 1;
+    tests_pass($expected_file);
 }
 
 my $perlbrew;
@@ -53,10 +47,11 @@ unless($perlbrew = $ENV{'TEST_PERLBREW'}) {
     plan skip_all => 'Please define TEST_PERLBREW for this test';
     exit 0;
 }
-plan tests => 6;
 
 my $wd = getcwd;
 
 run_tests $perlbrew, 'LocalBrew';
 chdir $wd;
 run_tests $perlbrew, 'Test::LocalBrew';
+
+done_testing;
