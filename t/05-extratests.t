@@ -53,5 +53,6 @@ my $wd = getcwd;
 run_tests $perlbrew, 'LocalBrew';
 chdir $wd;
 run_tests $perlbrew, 'Test::LocalBrew';
+chdir $wd;
 
 done_testing;

@@ -39,5 +39,6 @@ my $wd = getcwd;
 run_tests 'LocalBrew';
 chdir $wd;
 run_tests 'Test::LocalBrew';
+chdir $wd;
 
 done_testing;
