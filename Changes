@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.06 March 08 2014
      - Make sure that the environment doesn't cause things to fail (bug fixes)
 
 0.05 February 02 2013
