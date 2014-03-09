@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.07 March 08 2014
      - Don't index faux modules (PAUSE got mad =( )
 
 0.06 March 08 2014
