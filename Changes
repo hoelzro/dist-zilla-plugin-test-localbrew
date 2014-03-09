@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+     - Don't index faux modules (PAUSE got mad =( )
 
 0.06 March 08 2014
      - Make sure that the environment doesn't cause things to fail (bug fixes)
