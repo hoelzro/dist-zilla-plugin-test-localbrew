@@ -129,9 +129,9 @@ if(!defined $pid) {
     waitpid $pid, 0;
     ok !$?, "cpanm should successfully install your dist with no issues" or copy_log_file($tmphome->dirname);
 } else {
-    close STDIN;
-    close STDOUT;
-    close STDERR;
+    open STDIN, '<', File::Spec->devnull;
+    open STDOUT, '>', File::Spec->devnull;
+    open STDERR, '>', File::Spec->devnull;
 
     my @path = File::Spec->splitdir($FindBin::Bin);
 
