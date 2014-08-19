@@ -158,6 +158,8 @@ END_PERL
         return '';
     }}
 
+    # We use system here instead of exec so that $tmpdir gets cleaned up
+    # after cpanm finishes
     system 'perl', $cpanm_path, '-L', $tmpdir->dirname, '.';
     exit($? >> 8);
 }
