@@ -146,7 +146,7 @@ if(!defined $pid) {
     # override where cpanm puts its log file
     $ENV{'HOME'} = $tmphome->dirname;
 
-    {{
+{{
         unless($should_test_deps) {
             return <<'END_PERL';
     system 'perl', $cpanm_path, '--notest', '--installdeps', '-L', $tmpdir->dirname, '.';
@@ -156,7 +156,7 @@ if(!defined $pid) {
 END_PERL
         }
         return '';
-    }}
+}}
 
     # We use system here instead of exec so that $tmpdir gets cleaned up
     # after cpanm finishes
