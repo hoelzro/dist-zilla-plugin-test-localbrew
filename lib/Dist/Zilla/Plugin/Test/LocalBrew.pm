@@ -87,7 +87,23 @@ chomp $cpanm_path;
 my $perlbrew_bin = File::Spec->catdir($ENV{'PERLBREW_ROOT'}, 'perls',
     $brew, 'bin');
 
+my $perlbrew_path = $ENV{'PATH'};
+if(my $local_lib_root = $ENV{'PERL_LOCAL_LIB_ROOT'}) {
+    my @path = File::Spec->path;
+
+    while(@path && $path[0] =~ /^$local_lib_root/) {
+        shift @path;
+    }
+
+    if($^O eq 'MSWin32') {
+        $perlbrew_path = join(';', @path);
+    } else {
+        $perlbrew_path = join(':', @path);
+    }
+}
+
 my ( $env, $status ) = do {
+    local $ENV{'PATH'} = $perlbrew_path;
     local $ENV{'SHELL'} = '/bin/bash'; # fool perlbrew
     ( scalar(qx(perlbrew env $brew)), $? )
 };
@@ -112,7 +128,10 @@ foreach my $line (@lines) {
     }
 }
 
-my $pristine_path = qx(perlbrew display-pristine-path);
+my $pristine_path = do {
+    local $ENV{'PATH'} = $perlbrew_path;
+    qx(perlbrew display-pristine-path);
+};
 chomp $pristine_path;
 $ENV{'PATH'} = join(':', $ENV{'PERLBREW_PATH'}, $pristine_path);
 
