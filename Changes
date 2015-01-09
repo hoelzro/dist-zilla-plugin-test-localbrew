@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.08 January 08 2015
      - Fix bug involving standard I/O handles
      - Fix perlbrew usage from a perlbrew lib (GH #6, thanks Karen Etheridge!)
      - Fix EOL warnings in generated tests (GH #7, thanks Karen Etheridge!)
